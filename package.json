@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "@sveltejs/adapter-node": "^5.2.0"
+    "@sveltejs/adapter-node": "^5.2.0",
+    "sveltekit-adapter-iis": "^1.2.5"
   }
 }
