@@ -5,7 +5,7 @@
 	export let feedbackTimeout: number = 2000;
 	export let valueToCopy: string;
 
-	let iconDescription = 'Copy';
+	let iconDescription = 'Копировать';
 
 	function unsecuredCopyToClipboard(text: string) {
 		const focusb = document.activeElement;
@@ -32,7 +32,7 @@
 		}
 
 		let temporary_iconDescription = iconDescription.slice();
-		iconDescription = 'Copied!';
+		iconDescription = 'Скопировано!';
 		setTimeout(() => {
 			iconDescription = temporary_iconDescription;
 		}, feedbackTimeout);

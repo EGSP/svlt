@@ -208,7 +208,7 @@
 				<p>Настройки</p>
 				<Row gap={32}>
 					<RadioButtonGroup
-						legendText="Predefined password lengths"
+						legendText="Выбрать длину пароля"
 						name="length"
 						bind:selected={$password_length}
 					>
@@ -218,7 +218,7 @@
 						<RadioButton labelText="21" value={21} />
 					</RadioButtonGroup>
 					<Slider
-						labelText="Custom password length"
+						labelText="Задать длину пароля"
 						min={$checked_values.length}
 						max={55}
 						value={$password_length}
@@ -230,20 +230,20 @@
 					/>
 				</Row>
 			</Tile>
-			<Tile>
+			<Tile light>
 				<Row>
 					<Checkbox
 						bind:group={$checked_values}
-						labelText="Special symbols"
+						labelText="Специальные символы"
 						value="special"
 						checked
 					/>
-					<Checkbox bind:group={$checked_values} labelText="Numbers" value="numbers" checked />
-					<Checkbox bind:group={$checked_values} labelText="Lowercase" value="lowercase" checked />
-					<Checkbox bind:group={$checked_values} labelText="Uppercase" value="uppercase" checked />
+					<Checkbox bind:group={$checked_values} labelText="Цифры" value="numbers" checked />
+					<Checkbox bind:group={$checked_values} labelText="Нижний регистр" value="lowercase" checked />
+					<Checkbox bind:group={$checked_values} labelText="Верхний регистр" value="uppercase" checked />
 				</Row>
 				<Row>
-					<p class="tags-label">Checked values:</p>
+					<p class="tags-label">Выбранные символы:</p>
 					{#each $checked_values_ordered as value}
 						<Tag type={get_tag_color(value)}>{value}</Tag>
 					{/each}
@@ -257,7 +257,7 @@
 							lowContrast
 							hideCloseButton
 							kind="warning"
-							title="Not enough length:"
+							title="Недостаточная длина пароля:"
 							subtitle="Please select a length higher than checked values"
 						/>
 					{/if}
@@ -266,8 +266,8 @@
 							lowContrast
 							hideCloseButton
 							kind="warning"
-							title="No characters selected:"
-							subtitle="Please select at least one character option"
+							title="Не выбраны символы:"
+							subtitle="Пожалуйста, выберите хотя бы один набор символов"
 						/>
 					{/if}
 				</Tile>
@@ -275,24 +275,22 @@
 
 			<Tile light>
 				<Button disabled={!$is_generation_allowed} on:click={generate_passwords}
-					>Generate password</Button
+					>Сгенерировать пароль</Button
 				>
 			</Tile>
 
 			{#if $passwords.length > 0}
 				<Tile light>
-					<p>Results go here</p>
+					<p>Результаты генерации</p>
 					<Column>
-						{#if $passwords.length === 0}
-							<p>No passwords generated</p>
-						{:else}
+						
 							{#each $passwords as password}
 								<div class="horizontal">
 									<CopyButton valueToCopy={password} />
 									<p class="password-result">{password}</p>
 								</div>
 							{/each}
-						{/if}
+						
 					</Column>
 				</Tile>
 			{/if}
