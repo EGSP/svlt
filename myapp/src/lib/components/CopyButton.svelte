@@ -8,6 +8,7 @@
 	let iconDescription = 'Copy';
 
 	function unsecuredCopyToClipboard(text: string) {
+		const focusb = document.activeElement;
 		const textArea = document.createElement('textarea');
 		textArea.value = text;
 		document.body.appendChild(textArea);
@@ -19,6 +20,7 @@
 			console.error('Unable to copy to clipboard', err);
 		}
 		document.body.removeChild(textArea);
+		(focusb as HTMLElement)?.focus();
 	}
 
 	function handleClick() {

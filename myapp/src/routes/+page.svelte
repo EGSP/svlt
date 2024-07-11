@@ -57,7 +57,7 @@
 			$password_length = $checked_values.length;
 		}
 	}
-	$checked_values = ['lowercase', 'uppercase'];
+	$checked_values = ['lowercase', 'uppercase', 'numbers', 'special'];
 
 	async function generate_passwords() {
 		let has_symbols = $checked_values.includes('special');
@@ -110,7 +110,7 @@
 		}
 
 		if (special_symbols) {
-			charset.push(SPECIAL_SYMBOLS_EXTENDED);
+			charset.push(SPECIAL_SYMBOLS_BASIC);
 		}
 
 		if (numbers) {
@@ -137,9 +137,14 @@
 
 		// Разделяем длину на количество наборов символов
 		let password_chunk_lenght = length / charset.length;
+		password_chunk_lenght = Math.floor(password_chunk_lenght)
 
 		// Остаток длины
 		let rest_chunk_length = length % charset.length;
+
+
+		console.log('размер куска пароля ' + password_chunk_lenght);
+		console.log('остаток куска пароля ' + rest_chunk_length);
 
 		// Генерируем пароль
 		for (const element of charset) {
@@ -150,12 +155,12 @@
 		}
 
 		// Генерируем остаток пароля
-		for (const element of charset) {
+		
 			for (let i = 0; i < rest_chunk_length; i++) {
-				let random_index = Math.floor(Math.random() * element.length);
-				password = [...password, element[random_index]].join('');
+				let random_index = Math.floor(Math.random() * charset[0].length);
+				password = [...password, charset[0][random_index]].join('');
 			}
-		}
+		
 
 		// Перемешиваем пароль
 		password = shuffle([...password]).join('');
@@ -227,8 +232,8 @@
 	</Tile>
 	<Tile>
 		<Row>
-			<Checkbox bind:group={$checked_values} labelText="Special symbols" value="special" />
-			<Checkbox bind:group={$checked_values} labelText="Numbers" value="numbers" />
+			<Checkbox bind:group={$checked_values} labelText="Special symbols" value="special" checked/>
+			<Checkbox bind:group={$checked_values} labelText="Numbers" value="numbers" checked/>
 			<Checkbox bind:group={$checked_values} labelText="Lowercase" value="lowercase" checked />
 			<Checkbox bind:group={$checked_values} labelText="Uppercase" value="uppercase" checked />
 		</Row>
