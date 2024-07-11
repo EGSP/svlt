@@ -325,14 +325,14 @@
 			{#if $passwords.length > 0}
 				<Tile light>
 					<p>Результаты генерации</p>
-					<Column>
+					<div class="password-list">
 						{#each $passwords as password}
 							<div class="horizontal">
 								<CopyButton valueToCopy={password} />
 								<p class="password-result">{password}</p>
 							</div>
 						{/each}
-					</Column>
+					</div>
 				</Tile>
 			{/if}
 		</Column>
@@ -348,10 +348,20 @@
 	.page {
 		display: flex;
 		align-self: center;
+		max-width: 600px;
 	}
 
 	.password-result {
 		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	.password-list {
+		display: flex;
+		align-items: normal;
+		flex-wrap: wrap;
+		flex-direction: row;
+		justify-content: flex-start;
+		column-gap: 16px;
 	}
 
 	.horizontal {
