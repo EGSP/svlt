@@ -137,11 +137,10 @@
 
 		// Разделяем длину на количество наборов символов
 		let password_chunk_lenght = length / charset.length;
-		password_chunk_lenght = Math.floor(password_chunk_lenght)
+		password_chunk_lenght = Math.floor(password_chunk_lenght);
 
 		// Остаток длины
 		let rest_chunk_length = length % charset.length;
-
 
 		console.log('размер куска пароля ' + password_chunk_lenght);
 		console.log('остаток куска пароля ' + rest_chunk_length);
@@ -155,12 +154,11 @@
 		}
 
 		// Генерируем остаток пароля
-		
-			for (let i = 0; i < rest_chunk_length; i++) {
-				let random_index = Math.floor(Math.random() * charset[0].length);
-				password = [...password, charset[0][random_index]].join('');
-			}
-		
+
+		for (let i = 0; i < rest_chunk_length; i++) {
+			let random_index = Math.floor(Math.random() * charset[0].length);
+			password = [...password, charset[0][random_index]].join('');
+		}
 
 		// Перемешиваем пароль
 		password = shuffle([...password]).join('');
@@ -202,98 +200,117 @@
 	}
 </script>
 
-<Column>
-	<!-- <div class="tile-space" /> -->
-	<Tile light>
-		<p>Настройки</p>
-		<Row>
-			<RadioButtonGroup
-				legendText="Predefined password lengths"
-				name="length"
-				bind:selected={$password_length}
-			>
-				<RadioButton labelText="5" value={5} />
-				<RadioButton labelText="8" value={8} />
-				<RadioButton labelText="13" value={13} />
-				<RadioButton labelText="21" value={21} />
-			</RadioButtonGroup>
-			<Slider
-				labelText="Custom password length"
-				min={$checked_values.length}
-				max={55}
-				value={$password_length}
-				on:change={(event) => {
-					let value = event.detail;
-					// console.log(value);
-					$password_length = value;
-				}}
-			/>
-		</Row>
-	</Tile>
-	<Tile>
-		<Row>
-			<Checkbox bind:group={$checked_values} labelText="Special symbols" value="special" checked/>
-			<Checkbox bind:group={$checked_values} labelText="Numbers" value="numbers" checked/>
-			<Checkbox bind:group={$checked_values} labelText="Lowercase" value="lowercase" checked />
-			<Checkbox bind:group={$checked_values} labelText="Uppercase" value="uppercase" checked />
-		</Row>
-		<Row>
-			<p class="tags-label">Checked values:</p>
-			{#each $checked_values_ordered as value}
-				<Tag type={get_tag_color(value)}>{value}</Tag>
-			{/each}
-		</Row>
-	</Tile>
-
-	{#if !$is_generation_allowed}
-		<Tile light>
-			{#if !$is_generation_allowed_length}
-				<InlineNotification
-					lowContrast
-					hideCloseButton
-					kind="warning"
-					title="Not enough length:"
-					subtitle="Please select a length higher than checked values"
-				/>
-			{/if}
-			{#if !$is_generation_allowed_charset}
-				<InlineNotification
-					lowContrast
-					hideCloseButton
-					kind="warning"
-					title="No characters selected:"
-					subtitle="Please select at least one character option"
-				/>
-			{/if}
-		</Tile>
-	{/if}
-
-	<Tile light>
-		<Button disabled={!$is_generation_allowed} on:click={generate_passwords}
-			>Generate password</Button
-		>
-	</Tile>
-
-	{#if $passwords.length > 0}
-		<Tile light>
-			<p>Results go here</p>
-			<Column>
-				{#if $passwords.length === 0}
-					<p>No passwords generated</p>
-				{:else}
-					{#each $passwords as password}
-						<div class="horizontal">
-							<CopyButton valueToCopy={password} />
-							<p class="password-result">{password}</p>
-						</div>
+<div class="page-body">
+	<div class="page">
+		<Column>
+			<!-- <div class="tile-space" /> -->
+			<Tile light>
+				<p>Настройки</p>
+				<Row gap={32}>
+					<RadioButtonGroup
+						legendText="Predefined password lengths"
+						name="length"
+						bind:selected={$password_length}
+					>
+						<RadioButton labelText="5" value={5} />
+						<RadioButton labelText="8" value={8} />
+						<RadioButton labelText="13" value={13} />
+						<RadioButton labelText="21" value={21} />
+					</RadioButtonGroup>
+					<Slider
+						labelText="Custom password length"
+						min={$checked_values.length}
+						max={55}
+						value={$password_length}
+						on:change={(event) => {
+							let value = event.detail;
+							// console.log(value);
+							$password_length = value;
+						}}
+					/>
+				</Row>
+			</Tile>
+			<Tile>
+				<Row>
+					<Checkbox
+						bind:group={$checked_values}
+						labelText="Special symbols"
+						value="special"
+						checked
+					/>
+					<Checkbox bind:group={$checked_values} labelText="Numbers" value="numbers" checked />
+					<Checkbox bind:group={$checked_values} labelText="Lowercase" value="lowercase" checked />
+					<Checkbox bind:group={$checked_values} labelText="Uppercase" value="uppercase" checked />
+				</Row>
+				<Row>
+					<p class="tags-label">Checked values:</p>
+					{#each $checked_values_ordered as value}
+						<Tag type={get_tag_color(value)}>{value}</Tag>
 					{/each}
-				{/if}
-			</Column>
-		</Tile>
-	{/if}
-</Column>
+				</Row>
+			</Tile>
+
+			{#if !$is_generation_allowed}
+				<Tile light>
+					{#if !$is_generation_allowed_length}
+						<InlineNotification
+							lowContrast
+							hideCloseButton
+							kind="warning"
+							title="Not enough length:"
+							subtitle="Please select a length higher than checked values"
+						/>
+					{/if}
+					{#if !$is_generation_allowed_charset}
+						<InlineNotification
+							lowContrast
+							hideCloseButton
+							kind="warning"
+							title="No characters selected:"
+							subtitle="Please select at least one character option"
+						/>
+					{/if}
+				</Tile>
+			{/if}
+
+			<Tile light>
+				<Button disabled={!$is_generation_allowed} on:click={generate_passwords}
+					>Generate password</Button
+				>
+			</Tile>
+
+			{#if $passwords.length > 0}
+				<Tile light>
+					<p>Results go here</p>
+					<Column>
+						{#if $passwords.length === 0}
+							<p>No passwords generated</p>
+						{:else}
+							{#each $passwords as password}
+								<div class="horizontal">
+									<CopyButton valueToCopy={password} />
+									<p class="password-result">{password}</p>
+								</div>
+							{/each}
+						{/if}
+					</Column>
+				</Tile>
+			{/if}
+		</Column>
+	</div>
+</div>
 
 <style>
+	.page-body {
+		display: flex;
+		width: 100%;
+		flex-direction: column;
+	}
+	.page {
+		display: flex;
+		align-self: center;
+	}
+
 	.password-result {
 		font-family: 'IBM Plex Mono', monospace;
 	}
