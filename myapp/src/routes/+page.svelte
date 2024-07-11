@@ -16,14 +16,34 @@
 	import Row from '$lib/components/Row.svelte';
 	import Column from '$lib/components/Column.svelte';
 
-	const checked_values_order = ['special', 'numbers', 'lowercase', 'uppercase'];
+	const CHECKED_VALUES_ORDER = ['special', 'numbers', 'lowercase', 'uppercase'];
+
+	class SymbolsTag {
+		original_value: string;
+		value: string;
+		color: 'red' | 'blue' | 'gray' | 'warm-gray';
+
+		constructor(
+			original_value: string,
+			value: string,
+			color: 'red' | 'blue' | 'gray' | 'warm-gray'
+		) {
+			this.original_value = value;
+			this.value = value;
+			this.color = color;
+		}
+	}
 
 	let checked_values = writable<string[]>([]);
-	let checked_values_ordered = derived(checked_values, ($checked_values) =>
-		[...$checked_values].sort(
-			(a, b) => checked_values_order.indexOf(a) - checked_values_order.indexOf(b)
-		)
-	);
+	let checked_values_ordered = derived(checked_values, ($checked_values) => {
+		const sorted_values = [...$checked_values].sort(
+			(a, b) => CHECKED_VALUES_ORDER.indexOf(a) - CHECKED_VALUES_ORDER.indexOf(b)
+		);
+
+		return sorted_values.map(
+			(value) => new SymbolsTag(value, get_tag_loc(value), get_tag_color(value))
+		);
+	});
 
 	let password_length = writable<number>(8);
 
@@ -185,7 +205,7 @@
 		return array;
 	}
 
-	function get_tag_color(value: string): 'red' | 'blue' | 'gray' | 'warm-gray' | undefined {
+	function get_tag_color(value: string): 'red' | 'blue' | 'gray' | 'warm-gray' {
 		if (value === 'special') {
 			return 'red';
 		} else if (value === 'numbers') {
@@ -196,7 +216,20 @@
 			return 'gray';
 		}
 
-		return undefined;
+		return 'gray';
+	}
+
+	function get_tag_loc(value: string): string {
+		if (value === 'special') {
+			return 'специальные символы';
+		} else if (value === 'numbers') {
+			return 'цифры';
+		} else if (value === 'lowercase') {
+			return 'нижний регистр';
+		} else if (value === 'uppercase') {
+			return 'верхний регистр';
+		}
+		return value;
 	}
 </script>
 
@@ -239,15 +272,25 @@
 						checked
 					/>
 					<Checkbox bind:group={$checked_values} labelText="Цифры" value="numbers" checked />
-					<Checkbox bind:group={$checked_values} labelText="Нижний регистр" value="lowercase" checked />
-					<Checkbox bind:group={$checked_values} labelText="Верхний регистр" value="uppercase" checked />
+					<Checkbox
+						bind:group={$checked_values}
+						labelText="Нижний регистр"
+						value="lowercase"
+						checked
+					/>
+					<Checkbox
+						bind:group={$checked_values}
+						labelText="Верхний регистр"
+						value="uppercase"
+						checked
+					/>
 				</Row>
-				<Row>
+				<!-- <Row>
 					<p class="tags-label">Выбранные символы:</p>
-					{#each $checked_values_ordered as value}
-						<Tag type={get_tag_color(value)}>{value}</Tag>
+					{#each $checked_values_ordered as symbol_tag}
+						<Tag type={symbol_tag.color}>{symbol_tag.value}</Tag>
 					{/each}
-				</Row>
+				</Row> -->
 			</Tile>
 
 			{#if !$is_generation_allowed}
@@ -283,14 +326,12 @@
 				<Tile light>
 					<p>Результаты генерации</p>
 					<Column>
-						
-							{#each $passwords as password}
-								<div class="horizontal">
-									<CopyButton valueToCopy={password} />
-									<p class="password-result">{password}</p>
-								</div>
-							{/each}
-						
+						{#each $passwords as password}
+							<div class="horizontal">
+								<CopyButton valueToCopy={password} />
+								<p class="password-result">{password}</p>
+							</div>
+						{/each}
 					</Column>
 				</Tile>
 			{/if}
