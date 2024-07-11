@@ -1,7 +1,9 @@
 
+<script lang="ts">
+	export let gap: number = 0;
+</script>
 
-
-<div><slot/></div>
+<div style:gap={gap ?gap+"px": null}><slot/></div>
 
 <style>
 	div {
